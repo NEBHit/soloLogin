@@ -1,0 +1,38 @@
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse 
+
+from config.auth import AuthMiddleware
+from routers.usuario_router import router as usuarioRouter
+
+# ----------------------
+# IMPORTAR MODELOS (REGISTRA RELACIONES)
+# ----------------------
+import models  # registra todos los modelos antes de crear tablas
+
+app = FastAPI()
+
+# AUTH 
+app.add_middleware(AuthMiddleware)
+
+# SESIONES 
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="CLAVE_SUPER_SECRETA_CAMBIAR"
+)
+
+# Montar la carpeta "static"
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+def root():
+    return RedirectResponse("/login")
+
+templates = Jinja2Templates(directory="templates")
+
+app.include_router(usuarioRouter, prefix="", tags=["usuario"])
+
+
+
