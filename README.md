@@ -1,4 +1,4 @@
-# expedientes_obras
+# soloLogin
 
 Sistema web para el **logueo de usuario generico que debe agregarse a cualquier proyecto**.
 
